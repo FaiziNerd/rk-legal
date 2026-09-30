@@ -1,23 +1,44 @@
 import { z } from "zod";
 
-/** Contact form — validated on both client and server. */
+export const WHAT_HAPPENED = [
+  "Car accident",
+  "Motorcycle",
+  "Truck",
+  "Uber or Lyft",
+  "Hurt at work",
+  "Pedestrian",
+  "Dog bite",
+  "Slip and fall",
+  "Lemon car",
+  "Something else",
+] as const;
+
+export const WHEN_HAPPENED = [
+  "This week",
+  "This month",
+  "This year",
+  "Over a year ago",
+] as const;
+
+/**
+ * Case-review / contact form.
+ * Mirrors the Figma form: what happened, when, name, phone, optional message.
+ * Email is optional on the quick form; when provided we also send the client a
+ * confirmation. The Contact page collects it so clients get that confirmation.
+ */
 export const contactSchema = z.object({
+  whatHappened: z.enum(WHAT_HAPPENED).optional(),
+  whenHappened: z.enum(WHEN_HAPPENED).optional(),
   name: z.string().trim().min(2, "Please enter your name.").max(120),
-  email: z.string().trim().email("Please enter a valid email."),
-  phone: z
+  phone: z.string().trim().min(7, "Please enter a valid phone number.").max(30),
+  email: z
     .string()
     .trim()
-    .min(7, "Please enter a valid phone number.")
-    .max(30),
-  matter: z
-    .enum(["personal-injury", "lemon-law", "workers-comp", "other"])
-    .optional(),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Please tell us a little about what happened.")
-    .max(4000),
-  // Honeypot — must stay empty. Bots tend to fill every field.
+    .email("Please enter a valid email.")
+    .optional()
+    .or(z.literal("")),
+  message: z.string().trim().max(4000).optional(),
+  // Honeypot — must stay empty.
   company: z.string().max(0).optional(),
 });
 

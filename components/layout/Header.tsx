@@ -39,15 +39,9 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a
-            href={site.phoneHref}
-            className="t-nav inline-flex items-center gap-2 text-ink hover:text-brand"
-          >
+          <Button href={site.phoneHref} size="md">
             <Phone className="size-4" aria-hidden />
-            {site.phone}
-          </a>
-          <Button href="/contact" size="md">
-            Free case review
+            Call {site.phone}
           </Button>
         </div>
 

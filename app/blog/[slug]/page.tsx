@@ -8,12 +8,15 @@ import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { CaseReviewForm } from "@/components/forms/CaseReviewForm";
 import { NewsletterBand } from "@/components/sections/NewsletterBand";
-import { getPost, getRelated, posts, type Block } from "@/lib/posts";
+import { RichText } from "@/components/blog/RichText";
+import { type Block } from "@/lib/posts";
+import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/lib/contentful";
 import { site } from "@/lib/site";
 
 export const revalidate = 300;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
   return posts.map((p) => ({ slug: p.slug }));
 }
 
@@ -21,7 +24,7 @@ export async function generateMetadata({
   params,
 }: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: "Post not found" };
   return {
     title: post.title,
@@ -33,10 +36,10 @@ export default async function BlogPostPage({
   params,
 }: PageProps<"/blog/[slug]">) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const related = getRelated(post.slug);
+  const related = await getRelatedPosts(post.slug);
   const keepReading = related.slice(0, 2);
   const moreLinks = related.slice(2, 5);
 
@@ -76,7 +79,9 @@ export default async function BlogPostPage({
             />
 
             <div className="mt-10 max-w-2xl">
-              {post.body ? (
+              {post.bodyRichText ? (
+                <RichText document={post.bodyRichText} />
+              ) : post.body ? (
                 post.body.map((block, i) => <BlockView key={i} block={block} />)
               ) : (
                 <>

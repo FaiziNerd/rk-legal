@@ -1,11 +1,13 @@
 /**
- * Blog content.
+ * Blog content — types + sample data.
  *
- * This is sample data that mirrors the Figma "Blog" and "Blog Post" designs so
- * the pages are fully built. When Contentful credentials are available, replace
- * this module with a Contentful fetch that returns the same shape (see the
- * `Post` type) — the page components won't need to change.
+ * The sample data mirrors the Figma "Blog" and "Blog Post" designs so the pages
+ * are fully built without a CMS. When Contentful is configured (see
+ * `lib/contentful.ts`), the pages fetch live entries mapped to this same `Post`
+ * shape and fall back to this sample data otherwise — no page changes needed.
  */
+
+import type { Document } from "@contentful/rich-text-types";
 
 export const categories = [
   "Personal injury",
@@ -35,7 +37,10 @@ export type Post = {
   image: string; // path under /public
   featured?: boolean;
   deck?: string; // longer standfirst on the post page
+  /** Sample-data body (our tiny block model). */
   body?: Block[];
+  /** Contentful rich-text body, when the post comes from the CMS. */
+  bodyRichText?: Document;
 };
 
 export const posts: Post[] = [

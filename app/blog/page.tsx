@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { NewsletterBand } from "@/components/sections/NewsletterBand";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { BlogList } from "@/components/blog/BlogList";
-import { posts } from "@/lib/posts";
+import { getAllPosts } from "@/lib/contentful";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -17,7 +17,8 @@ export const metadata: Metadata = {
 // Rebuild the cached list on this interval once Contentful is wired.
 export const revalidate = 300;
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
+  const posts = await getAllPosts();
   return (
     <>
       <Section>

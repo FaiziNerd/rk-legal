@@ -35,12 +35,7 @@ export const contactSchema = z.object({
   carType: z.enum(CAR_TYPE).optional(),
   name: z.string().trim().min(2, "Please enter your name.").max(120),
   phone: z.string().trim().min(7, "Please enter a valid phone number.").max(30),
-  email: z
-    .string()
-    .trim()
-    .email("Please enter a valid email.")
-    .optional()
-    .or(z.literal("")),
+  email: z.string().trim().email("Please enter a valid email."),
   message: z.string().trim().max(4000).optional(),
   // Honeypot — must stay empty.
   company: z.string().max(0).optional(),
@@ -78,6 +73,7 @@ export const referralSchema = z.object({
   needHelp: z.enum(REFERRAL_TOPICS).optional(),
   name: z.string().trim().min(2, "Please enter your name.").max(120),
   phone: z.string().trim().min(7, "Please enter a valid phone number.").max(30),
+  email: z.string().trim().email("Please enter a valid email."),
   message: z.string().trim().max(4000).optional(),
   // Honeypot — must stay empty.
   company: z.string().max(0).optional(),

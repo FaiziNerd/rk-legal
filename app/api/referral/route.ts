@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { referralSchema } from "@/lib/validation";
 import { getResend, emailConfig } from "@/lib/resend";
-import { referralNotificationEmail } from "@/lib/emails";
+import {
+  referralNotificationEmail,
+  referralConfirmationEmail,
+} from "@/lib/emails";
 
 export async function POST(request: Request) {
   let json: unknown;
@@ -29,9 +32,11 @@ export async function POST(request: Request) {
   const { from, firmInbox } = emailConfig();
 
   try {
+    const resend = getResend();
+
+    // Notify the firm (to an address we control).
     if (firmInbox) {
       const mail = referralNotificationEmail(data);
-      const resend = getResend();
       await resend.emails.send({
         from,
         to: firmInbox,
@@ -39,6 +44,21 @@ export async function POST(request: Request) {
         html: mail.html,
         text: mail.text,
       });
+    }
+
+    // Confirmation to the client — best effort (needs a verified domain to
+    // reach arbitrary addresses; must not fail the request).
+    try {
+      const clientMail = referralConfirmationEmail(data);
+      await resend.emails.send({
+        from,
+        to: data.email,
+        subject: clientMail.subject,
+        html: clientMail.html,
+        text: clientMail.text,
+      });
+    } catch (confirmErr) {
+      console.warn("[referral] client confirmation skipped:", confirmErr);
     }
 
     return NextResponse.json({ ok: true });

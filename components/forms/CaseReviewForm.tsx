@@ -10,21 +10,18 @@ import { WHAT_HAPPENED, WHEN_HAPPENED, CAR_TYPE } from "@/lib/validation";
 type Status = "idle" | "submitting" | "success" | "error";
 
 export function CaseReviewForm({
-  showEmail = false,
   defaultWhatHappened = null,
   whenLabel = "When did it happen?",
   showCarType = false,
   compact = false,
 }: {
-  /** Show an email field so the client also receives a confirmation email. */
-  showEmail?: boolean;
   /** Pre-select a "What happened?" chip (e.g. "Lemon car" on the lemon-law page). */
   defaultWhatHappened?: (typeof WHAT_HAPPENED)[number] | null;
   /** Label for the timing step (lemon law asks "When did the problems start?"). */
   whenLabel?: string;
   /** Show the "What kind of car?" step (lemon law only). */
   showCarType?: boolean;
-  /** Name + phone only, for tight sidebars (blog post). */
+  /** Drop the "what/when" chips and message, for tight sidebars (blog post). */
   compact?: boolean;
 }) {
   const [whatHappened, setWhatHappened] = useState<string | null>(
@@ -174,18 +171,17 @@ export function CaseReviewForm({
         </div>
       </div>
 
-      {showEmail && (
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="maria@example.com"
-            autoComplete="email"
-          />
-        </div>
-      )}
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="maria@example.com"
+          required
+          autoComplete="email"
+        />
+      </div>
 
       {!compact && (
         <div>

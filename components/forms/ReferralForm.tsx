@@ -25,6 +25,7 @@ export function ReferralForm() {
       needHelp: needHelp ?? undefined,
       name: String(fd.get("name") ?? ""),
       phone: String(fd.get("phone") ?? ""),
+      email: String(fd.get("email") ?? ""),
       message: String(fd.get("message") ?? ""),
       company: String(fd.get("company") ?? ""),
     };
@@ -112,6 +113,18 @@ export function ReferralForm() {
             autoComplete="tel"
           />
         </div>
+      </div>
+
+      <div>
+        <Label htmlFor="ref-email">Email</Label>
+        <Input
+          id="ref-email"
+          name="email"
+          type="email"
+          placeholder="maria@example.com"
+          required
+          autoComplete="email"
+        />
       </div>
 
       <div>

@@ -63,11 +63,34 @@ export function firmNotificationEmail(data: ContactInput) {
   };
 }
 
+/** Confirmation email sent to the person who requested a referral. */
+export function referralConfirmationEmail(data: ReferralInput) {
+  const html = wrap(`
+    <h1 style="color:#1E2B25;font-size:22px;margin:0 0 12px">Thanks, ${escapeHtml(
+      data.name,
+    )} — we got your request</h1>
+    <p style="margin:0 0 16px">We'll review what you need${
+      data.needHelp ? ` (${escapeHtml(data.needHelp)})` : ""
+    } and call you back at <strong>${escapeHtml(
+      data.phone,
+    )}</strong> with the name of a firm we trust. The referral is free, and there's no obligation.</p>
+    <p style="margin:0 0 16px">If it's urgent, reach us at
+      <a href="${site.phoneHref}" style="color:#2F6B4E">${site.phone}</a>.</p>
+    <p style="margin:0;color:#55635C">We speak ${site.languages}.</p>
+  `);
+  return {
+    subject: "We received your referral request",
+    html,
+    text: `Thanks, ${data.name} — we got your request. We'll call you back at ${data.phone} with the name of a firm we trust. Free, no obligation. Call us at ${site.phone}.`,
+  };
+}
+
 /** Notification email for a referral request sent to the firm inbox. */
 export function referralNotificationEmail(data: ReferralInput) {
   const rows: [string, string][] = [
     ["Name", data.name],
     ["Phone", data.phone],
+    ["Email", data.email],
     ["Needs help with", data.needHelp ?? "—"],
     ["Message", data.message || "—"],
   ];

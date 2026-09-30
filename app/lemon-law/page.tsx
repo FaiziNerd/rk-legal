@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Star, Check, CheckCircle2 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -142,15 +143,10 @@ export default function LemonLawPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-tint">
-        {/* TODO: replace with the client's hero photograph (car + lemon tree) */}
-        <div
-          className="absolute inset-0 bg-gradient-to-bl from-[#f6f0d8] via-[#f3f6f1] to-[#dfe8df]"
-          aria-hidden
-        />
-        <Container className="relative py-16 md:py-24 lg:py-28">
-          <div className="max-w-2xl">
-            <h1 className="t-display">California lemon law help</h1>
+      <section className="bg-tint">
+        <Container className="grid items-center gap-10 py-14 md:py-20 lg:grid-cols-2 lg:gap-14">
+          <div>
+            <h1 className="t-display max-w-xl">California lemon law help</h1>
             <p className="t-body-l mt-5 max-w-xl text-body">
               If you win, the manufacturer pays our fees, so you pay nothing. Get
               a refund, a replacement, or cash for a car that keeps breaking.
@@ -168,6 +164,15 @@ export default function LemonLawPage() {
               </span>
             </div>
           </div>
+          {/* Extracted from the design PNG — swap for the client's original when available */}
+          <Image
+            src="/images/lemon-hero.jpg"
+            alt="A white SUV parked by a lemon tree"
+            width={1296}
+            height={678}
+            priority
+            className="h-auto w-full rounded-card object-cover"
+          />
         </Container>
       </section>
 
@@ -233,11 +238,13 @@ export default function LemonLawPage() {
       <Section>
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
           <div>
-            {/* TODO: replace with the client's photo (car in the shop) */}
-            <div
-              className="aspect-[4/3] w-full rounded-card bg-gradient-to-br from-[#e9efe6] via-[#f3f6f1] to-[#dfe8df]"
-              role="img"
-              aria-label="A car being repaired in a shop"
+            {/* Extracted from the design PNG — swap for the client's original when available */}
+            <Image
+              src="/images/lemon-shop.jpg"
+              alt="A car being repaired in a shop"
+              width={1204}
+              height={1095}
+              className="h-auto w-full rounded-card object-cover"
             />
             <p className="t-fine-print mt-2">
               Photo: Shixart1985, Wikimedia Commons, CC BY 2.0

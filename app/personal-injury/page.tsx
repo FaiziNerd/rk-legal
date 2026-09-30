@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Star, Check, Phone } from "lucide-react";
+import Image from "next/image";
+import { Star } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
@@ -180,15 +181,10 @@ export default function PersonalInjuryPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-tint">
-        {/* TODO: replace with the client's hero photograph (desert street / office) */}
-        <div
-          className="absolute inset-0 bg-gradient-to-br from-[#e9efe6] via-[#f3f6f1] to-[#dfe8df]"
-          aria-hidden
-        />
-        <Container className="relative py-16 md:py-24 lg:py-28">
-          <div className="max-w-2xl">
-            <h1 className="t-display">
+      <section className="bg-tint">
+        <Container className="grid items-center gap-10 py-14 md:py-20 lg:grid-cols-2 lg:gap-14">
+          <div>
+            <h1 className="t-display max-w-xl">
               Personal injury lawyer in Victorville and Southern California
             </h1>
             <p className="t-body-l mt-5 max-w-lg text-body">
@@ -207,6 +203,15 @@ export default function PersonalInjuryPage() {
               </span>
             </div>
           </div>
+          {/* Extracted from the design PNG — swap for the client's original when available */}
+          <Image
+            src="/images/pi-hero.jpg"
+            alt="A car parked outside a Victorville home"
+            width={956}
+            height={657}
+            priority
+            className="h-auto w-full rounded-card object-cover"
+          />
         </Container>
       </section>
 
@@ -333,11 +338,13 @@ export default function PersonalInjuryPage() {
               Keep this list on your phone. What you do in the first few days can
               make a real difference to your claim.
             </p>
-            {/* TODO: replace with the client's photo (documenting a crash) */}
-            <div
-              className="mt-8 aspect-[4/3] w-full rounded-card bg-gradient-to-br from-[#e9efe6] via-[#f3f6f1] to-[#dfe8df]"
-              role="img"
-              aria-label="Photographing damage after a crash"
+            {/* Extracted from the design PNG — swap for the client's original when available */}
+            <Image
+              src="/images/pi-after-accident.jpg"
+              alt="Photographing bumper damage with a phone after a crash"
+              width={1112}
+              height={794}
+              className="mt-8 h-auto w-full rounded-card object-cover"
             />
           </div>
           <ol className="divide-y divide-divider border-t border-divider">

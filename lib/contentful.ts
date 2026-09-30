@@ -6,12 +6,11 @@
  * return live entries mapped to the shared `Post` shape; otherwise they fall
  * back to the sample data in `lib/posts.ts`, so the site always renders.
  *
- * Expected content model — content type id `blogPost` with fields:
- *   title (Short text), slug (Short text, unique), category (Short text),
- *   excerpt (Long text), deck (Long text, optional), publishDate (Date),
- *   readTime (Short text, optional), heroImage (Media – one asset),
- *   body (Rich text), featured (Boolean, optional),
- *   seoDescription (Long text, optional)
+ * Content model — content type id `blogPost` (as it exists in the space):
+ *   title (Short text), slug (Short text), category (Short text),
+ *   description (Short text – used as both card excerpt and post deck),
+ *   date (Short text, e.g. "September 18, 2026"), readTime (Short text),
+ *   featured (Boolean), image (Media – one asset), content (Rich text)
  */
 
 import {
@@ -52,16 +51,14 @@ type BlogPostFields = {
   title: string;
   slug: string;
   category: string;
-  excerpt: string;
-  deck?: string;
-  publishDate: string;
+  description?: string;
+  date?: string;
   readTime?: string;
-  heroImage?: {
+  image?: {
     fields?: { file?: { url?: string }; description?: string; title?: string };
   };
-  body?: Document;
+  content?: Document;
   featured?: boolean;
-  seoDescription?: string;
 };
 
 /** The Contentful content-type skeleton, for typed queries. */
@@ -70,28 +67,15 @@ type BlogPostSkeleton = EntrySkeletonType<
     title: EntryFieldTypes.Symbol;
     slug: EntryFieldTypes.Symbol;
     category: EntryFieldTypes.Symbol;
-    excerpt: EntryFieldTypes.Text;
-    deck: EntryFieldTypes.Text;
-    publishDate: EntryFieldTypes.Date;
+    description: EntryFieldTypes.Symbol;
+    date: EntryFieldTypes.Symbol;
     readTime: EntryFieldTypes.Symbol;
-    heroImage: EntryFieldTypes.AssetLink;
-    body: EntryFieldTypes.RichText;
+    image: EntryFieldTypes.AssetLink;
+    content: EntryFieldTypes.RichText;
     featured: EntryFieldTypes.Boolean;
-    seoDescription: EntryFieldTypes.Text;
   },
   "blogPost"
 >;
-
-const dateFmt = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
-
-function formatDate(iso: string): string {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : dateFmt.format(d);
-}
 
 /** Rough reading time from a rich-text document (~200 wpm). */
 function estimateReadTime(doc?: Document): string {
@@ -116,8 +100,8 @@ function normalizeCategory(value: string): Category {
   return match ?? "Firm news";
 }
 
-function imageUrl(hero: BlogPostFields["heroImage"]): string {
-  const url = hero?.fields?.file?.url;
+function imageUrl(image: BlogPostFields["image"]): string {
+  const url = image?.fields?.file?.url;
   if (!url) return "/images/blog-24-hours.jpg"; // safe placeholder
   return url.startsWith("//") ? `https:${url}` : url;
 }
@@ -127,13 +111,13 @@ function mapEntry(fields: BlogPostFields): Post {
     slug: fields.slug,
     category: normalizeCategory(fields.category),
     title: fields.title,
-    excerpt: fields.excerpt ?? "",
-    deck: fields.deck,
-    date: formatDate(fields.publishDate),
-    readTime: fields.readTime?.trim() || estimateReadTime(fields.body),
-    image: imageUrl(fields.heroImage),
+    excerpt: fields.description ?? "",
+    deck: fields.description,
+    date: fields.date ?? "",
+    readTime: fields.readTime?.trim() || estimateReadTime(fields.content),
+    image: imageUrl(fields.image),
     featured: Boolean(fields.featured),
-    bodyRichText: fields.body,
+    bodyRichText: fields.content,
   };
 }
 
@@ -143,7 +127,7 @@ export async function getAllPosts(): Promise<Post[]> {
   try {
     const res = await getClient().getEntries<BlogPostSkeleton>({
       content_type: "blogPost",
-      order: ["-fields.publishDate"],
+      order: ["-sys.createdAt"],
       limit: 200,
     });
     const mapped = res.items

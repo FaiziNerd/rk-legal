@@ -39,6 +39,7 @@ export function firmNotificationEmail(data: ContactInput) {
     ["Phone", data.phone],
     ["Email", data.email || "—"],
     ["What happened", data.whatHappened ?? "—"],
+    ...(data.carType ? ([["Car type", data.carType]] as [string, string][]) : []),
     ["When", data.whenHappened ?? "—"],
     ["Message", data.message || "—"],
   ];

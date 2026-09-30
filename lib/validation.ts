@@ -20,6 +20,9 @@ export const WHEN_HAPPENED = [
   "Over a year ago",
 ] as const;
 
+/** Vehicle type — only asked on the lemon-law case-review form. */
+export const CAR_TYPE = ["New", "Used under warranty", "Leased"] as const;
+
 /**
  * Case-review / contact form.
  * Mirrors the Figma form: what happened, when, name, phone, optional message.
@@ -29,6 +32,7 @@ export const WHEN_HAPPENED = [
 export const contactSchema = z.object({
   whatHappened: z.enum(WHAT_HAPPENED).optional(),
   whenHappened: z.enum(WHEN_HAPPENED).optional(),
+  carType: z.enum(CAR_TYPE).optional(),
   name: z.string().trim().min(2, "Please enter your name.").max(120),
   phone: z.string().trim().min(7, "Please enter a valid phone number.").max(30),
   email: z

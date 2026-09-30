@@ -4,6 +4,7 @@ Running log of hours spent, per the client's request. Newest entries at top.
 
 | Date | Phase | Work | Hours |
 |------|-------|------|-------|
+| 2026-09-30 | Phase 3 (Personal Injury) | Set up PNG-crop workflow (Python/PIL) to read client design exports cheaply; built full Personal Injury page from design: hero, contact card + case-review form, "Cases we handle" list, insurer-tactics comparison table, after-accident checklist, how-it-works steps, client reviews, FAQ, final CTA; verified responsive desktop + mobile | 1.0 |
 | 2026-09-30 | Phase 2 (Home) | Captured full Home design (desktop) via Chrome/Figma; built complete Home page: hero, trust bar, case-review form, practice cards, 3 steps, lemon-law value band, "keeps you informed", Google reviews carousel, FAQ accordion, blog preview, newsletter band, referral line, final CTA; reusable form/section components; Resend contact + newsletter API routes + email templates; updated Header/Footer/site config with real firm data | 2.5 |
 | 2026-09-30 | Phase 0–1 | Next.js 16 + TS + Tailwind v4 scaffold; RK design tokens (colors, type ramp, radius, spacing) wired into theme; base UI (Container, Section, Button); Header w/ mobile menu, Footer, Wordmark; all 10 routes stubbed; contact/newsletter validation + env scaffolding; green build + lint | 1.5 |
 | 2026-09-30 | Setup | Figma design-system extraction (tokens, type ramp), requirements review, project plan | 0.5 |

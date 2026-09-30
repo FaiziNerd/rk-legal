@@ -5,17 +5,29 @@ import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { OptionChip } from "@/components/ui/OptionChip";
 import { Label, Input, Textarea, FieldError } from "@/components/ui/Field";
-import { WHAT_HAPPENED, WHEN_HAPPENED } from "@/lib/validation";
+import { WHAT_HAPPENED, WHEN_HAPPENED, CAR_TYPE } from "@/lib/validation";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 export function CaseReviewForm({
   showEmail = false,
+  defaultWhatHappened = null,
+  whenLabel = "When did it happen?",
+  showCarType = false,
 }: {
   /** Show an email field so the client also receives a confirmation email. */
   showEmail?: boolean;
+  /** Pre-select a "What happened?" chip (e.g. "Lemon car" on the lemon-law page). */
+  defaultWhatHappened?: (typeof WHAT_HAPPENED)[number] | null;
+  /** Label for the timing step (lemon law asks "When did the problems start?"). */
+  whenLabel?: string;
+  /** Show the "What kind of car?" step (lemon law only). */
+  showCarType?: boolean;
 }) {
-  const [whatHappened, setWhatHappened] = useState<string | null>(null);
+  const [whatHappened, setWhatHappened] = useState<string | null>(
+    defaultWhatHappened,
+  );
+  const [carType, setCarType] = useState<string | null>(null);
   const [whenHappened, setWhenHappened] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +41,7 @@ export function CaseReviewForm({
     const fd = new FormData(form);
     const payload = {
       whatHappened: whatHappened ?? undefined,
+      carType: carType ?? undefined,
       whenHappened: whenHappened ?? undefined,
       name: String(fd.get("name") ?? ""),
       phone: String(fd.get("phone") ?? ""),
@@ -49,7 +62,8 @@ export function CaseReviewForm({
       }
       setStatus("success");
       form.reset();
-      setWhatHappened(null);
+      setWhatHappened(defaultWhatHappened);
+      setCarType(null);
       setWhenHappened(null);
     } catch (err) {
       setStatus("error");
@@ -99,8 +113,27 @@ export function CaseReviewForm({
         </div>
       </fieldset>
 
+      {showCarType && (
+        <fieldset>
+          <legend className="t-label mb-2 block text-ink">
+            What kind of car?
+          </legend>
+          <div className="flex flex-wrap gap-2.5">
+            {CAR_TYPE.map((option) => (
+              <OptionChip
+                key={option}
+                selected={carType === option}
+                onClick={() => setCarType((v) => (v === option ? null : option))}
+              >
+                {option}
+              </OptionChip>
+            ))}
+          </div>
+        </fieldset>
+      )}
+
       <fieldset>
-        <legend className="t-label mb-2 block text-ink">When did it happen?</legend>
+        <legend className="t-label mb-2 block text-ink">{whenLabel}</legend>
         <div className="flex flex-wrap gap-2.5">
           {WHEN_HAPPENED.map((option) => (
             <OptionChip

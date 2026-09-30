@@ -14,6 +14,7 @@ export function CaseReviewForm({
   defaultWhatHappened = null,
   whenLabel = "When did it happen?",
   showCarType = false,
+  compact = false,
 }: {
   /** Show an email field so the client also receives a confirmation email. */
   showEmail?: boolean;
@@ -23,6 +24,8 @@ export function CaseReviewForm({
   whenLabel?: string;
   /** Show the "What kind of car?" step (lemon law only). */
   showCarType?: boolean;
+  /** Name + phone only, for tight sidebars (blog post). */
+  compact?: boolean;
 }) {
   const [whatHappened, setWhatHappened] = useState<string | null>(
     defaultWhatHappened,
@@ -96,24 +99,26 @@ export function CaseReviewForm({
         className="hidden"
       />
 
-      <fieldset>
-        <legend className="t-label mb-2 block text-ink">What happened?</legend>
-        <div className="flex flex-wrap gap-2.5">
-          {WHAT_HAPPENED.map((option) => (
-            <OptionChip
-              key={option}
-              selected={whatHappened === option}
-              onClick={() =>
-                setWhatHappened((v) => (v === option ? null : option))
-              }
-            >
-              {option}
-            </OptionChip>
-          ))}
-        </div>
-      </fieldset>
+      {!compact && (
+        <fieldset>
+          <legend className="t-label mb-2 block text-ink">What happened?</legend>
+          <div className="flex flex-wrap gap-2.5">
+            {WHAT_HAPPENED.map((option) => (
+              <OptionChip
+                key={option}
+                selected={whatHappened === option}
+                onClick={() =>
+                  setWhatHappened((v) => (v === option ? null : option))
+                }
+              >
+                {option}
+              </OptionChip>
+            ))}
+          </div>
+        </fieldset>
+      )}
 
-      {showCarType && (
+      {!compact && showCarType && (
         <fieldset>
           <legend className="t-label mb-2 block text-ink">
             What kind of car?
@@ -132,22 +137,24 @@ export function CaseReviewForm({
         </fieldset>
       )}
 
-      <fieldset>
-        <legend className="t-label mb-2 block text-ink">{whenLabel}</legend>
-        <div className="flex flex-wrap gap-2.5">
-          {WHEN_HAPPENED.map((option) => (
-            <OptionChip
-              key={option}
-              selected={whenHappened === option}
-              onClick={() =>
-                setWhenHappened((v) => (v === option ? null : option))
-              }
-            >
-              {option}
-            </OptionChip>
-          ))}
-        </div>
-      </fieldset>
+      {!compact && (
+        <fieldset>
+          <legend className="t-label mb-2 block text-ink">{whenLabel}</legend>
+          <div className="flex flex-wrap gap-2.5">
+            {WHEN_HAPPENED.map((option) => (
+              <OptionChip
+                key={option}
+                selected={whenHappened === option}
+                onClick={() =>
+                  setWhenHappened((v) => (v === option ? null : option))
+                }
+              >
+                {option}
+              </OptionChip>
+            ))}
+          </div>
+        </fieldset>
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
@@ -180,14 +187,16 @@ export function CaseReviewForm({
         </div>
       )}
 
-      <div>
-        <Label htmlFor="message">Anything else? (optional)</Label>
-        <Textarea
-          id="message"
-          name="message"
-          placeholder="Rear-ended on the I-15 last Tuesday. Their insurance keeps calling me."
-        />
-      </div>
+      {!compact && (
+        <div>
+          <Label htmlFor="message">Anything else? (optional)</Label>
+          <Textarea
+            id="message"
+            name="message"
+            placeholder="Rear-ended on the I-15 last Tuesday. Their insurance keeps calling me."
+          />
+        </div>
+      )}
 
       <div>
         <Button type="submit" size="lg" disabled={status === "submitting"}>

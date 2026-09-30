@@ -55,3 +55,32 @@ export const newsletterSchema = z.object({
 });
 
 export type NewsletterInput = z.infer<typeof newsletterSchema>;
+
+/** Referral request — areas outside the firm's own practice. */
+export const REFERRAL_TOPICS = [
+  "Immigration",
+  "Employment",
+  "DUI",
+  "Criminal defense",
+  "Divorce",
+  "Family law",
+  "Business",
+  "Litigation",
+  "Estate planning, wills and trusts",
+  "Something else",
+] as const;
+
+/**
+ * Referral form on the Referral partners page.
+ * Mirrors the Figma form: what you need help with, name, phone.
+ */
+export const referralSchema = z.object({
+  needHelp: z.enum(REFERRAL_TOPICS).optional(),
+  name: z.string().trim().min(2, "Please enter your name.").max(120),
+  phone: z.string().trim().min(7, "Please enter a valid phone number.").max(30),
+  message: z.string().trim().max(4000).optional(),
+  // Honeypot — must stay empty.
+  company: z.string().max(0).optional(),
+});
+
+export type ReferralInput = z.infer<typeof referralSchema>;

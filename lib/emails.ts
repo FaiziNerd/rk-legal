@@ -1,5 +1,5 @@
 import { site, formattedAddress } from "./site";
-import type { ContactInput } from "./validation";
+import type { ContactInput, ReferralInput } from "./validation";
 
 const wrap = (inner: string) => `
   <div style="font-family:Figtree,Arial,sans-serif;color:#3B4A43;line-height:1.6;max-width:560px;margin:0 auto;padding:24px">
@@ -60,6 +60,33 @@ export function firmNotificationEmail(data: ContactInput) {
     html,
     text: rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
     replyTo: data.email || undefined,
+  };
+}
+
+/** Notification email for a referral request sent to the firm inbox. */
+export function referralNotificationEmail(data: ReferralInput) {
+  const rows: [string, string][] = [
+    ["Name", data.name],
+    ["Phone", data.phone],
+    ["Needs help with", data.needHelp ?? "—"],
+    ["Message", data.message || "—"],
+  ];
+  const table = rows
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:6px 12px 6px 0;color:#55635C;vertical-align:top;white-space:nowrap">${k}</td><td style="padding:6px 0;color:#1E2B25">${escapeHtml(
+          v,
+        )}</td></tr>`,
+    )
+    .join("");
+  const html = wrap(`
+    <h1 style="color:#1E2B25;font-size:22px;margin:0 0 12px">New referral request</h1>
+    <table style="border-collapse:collapse;font-size:15px">${table}</table>
+  `);
+  return {
+    subject: `New referral request: ${data.name}`,
+    html,
+    text: rows.map(([k, v]) => `${k}: ${v}`).join("\n"),
   };
 }
 

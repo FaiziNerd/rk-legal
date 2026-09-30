@@ -1,26 +1,249 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   RK Legal — Romero Kucerkova Law design system
+   Tokens pulled from Figma "Foundations". Tailwind v4 (CSS-first) theme.
+   ========================================================================== */
+
+@theme {
+  /* Font */
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Color roles (paint styles RK/<role>) */
+  --color-ink: #1e2b25; /* headings, primary text */
+  --color-body: #3b4a43; /* body copy */
+  --color-muted: #55635c; /* secondary text, fine print */
+  --color-brand: #2f6b4e; /* buttons, selected, links (RK "Green") */
+  --color-brand-dark: #285d43; /* hover/pressed for brand */
+  --color-tint: #f3f6f1; /* cards and bands */
+  --color-divider: #dce3de; /* hairlines */
+  --color-input: #8a968f; /* input borders */
+  --color-chip: #c9d2cc; /* chips, secondary buttons */
+  --color-placeholder: #6b7872; /* placeholder text */
+  --color-star: #fbbc04; /* Google stars only */
+  --color-error: #9a3412; /* error border and text */
+  --color-error-bg: #fbf1ec; /* error message fill */
+  --color-surface: #ffffff; /* page background */
+
+  /* Radius: 10 buttons/chips/inputs, 20 cards/bands/photos */
+  --radius-btn: 10px;
+  --radius-card: 20px;
+
+  /* Layout */
+  --spacing-gutter: 44px; /* desktop page gutter */
+  --container-content: 1264px; /* content column inside 1440 frame */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background: var(--color-surface);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  ::placeholder {
+    color: var(--color-placeholder);
+  }
+
+  /* Visible, on-brand focus ring for keyboard users */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* --------------------------------------------------------------------------
+   Typography — RK type ramp (Figtree). One semantic class per Figma style.
+   The three styles with a mobile variant scale up at the md breakpoint.
+   -------------------------------------------------------------------------- */
+@layer components {
+  .t-display {
+    font-size: 2.25rem; /* Mobile/Display 36 */
+    line-height: 2.625rem; /* 42 */
+    letter-spacing: -1.5px;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .t-h2 {
+    font-size: 1.875rem; /* Mobile/H2 30 */
+    line-height: 2.25rem; /* 36 */
+    letter-spacing: -1px;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .t-h2-form {
+    font-size: 2.25rem; /* 36 -> 44 desktop */
+    line-height: 1.1;
+    letter-spacing: -1px;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .t-h3 {
+    font-size: 1.5rem; /* 24 */
+    line-height: 1.875rem; /* 30 */
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .t-card-title {
+    font-size: 1.375rem; /* 22 */
+    line-height: 1.75rem; /* 28 */
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .t-question {
+    font-size: 1.25rem; /* 20 */
+    line-height: 1.75rem; /* 28 */
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .t-body-l {
+    font-size: 1.125rem; /* Mobile/Body L 18 */
+    line-height: 1.6875rem; /* 27 */
+    font-weight: 400;
+  }
+  .t-sub {
+    font-size: 1.1875rem; /* 19 */
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  .t-body {
+    font-size: 1.0625rem; /* 17 */
+    line-height: 1.625rem; /* 26 */
+    font-weight: 400;
+  }
+  .t-body-italic {
+    font-size: 1.0625rem;
+    line-height: 1.625rem;
+    font-weight: 400;
+    font-style: italic;
+  }
+  .t-input {
+    font-size: 1.0625rem; /* 17 */
+    line-height: 1.2;
+    font-weight: 400;
+  }
+  .t-button-l {
+    font-size: 1.0625rem; /* 17 */
+    line-height: 1;
+    font-weight: 600;
+  }
+  .t-button {
+    font-size: 1rem; /* 16 */
+    line-height: 1;
+    font-weight: 600;
+  }
+  .t-label {
+    font-size: 1rem; /* 16 */
+    line-height: 1;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .t-nav {
+    font-size: 1rem; /* 16 */
+    line-height: 1;
+    font-weight: 500;
+  }
+  .t-link {
+    font-size: 1rem; /* 16 */
+    line-height: 1.5; /* 24 */
+    font-weight: 400;
+  }
+  .t-small {
+    font-size: 0.9375rem; /* 15 */
+    line-height: 1.375rem; /* 22 */
+    font-weight: 400;
+  }
+  .t-small-medium {
+    font-size: 0.9375rem; /* 15 */
+    line-height: 1;
+    font-weight: 500;
+  }
+  .t-category {
+    font-size: 0.875rem; /* 14 */
+    line-height: 1;
+    font-weight: 500;
+  }
+  .t-fine-print {
+    font-size: 0.84375rem; /* 13.5 */
+    line-height: 1.25rem; /* 20 */
+    font-weight: 400;
+    color: var(--color-muted);
+  }
+  .t-phone-l {
+    font-size: 1.875rem; /* 30 */
+    line-height: 1;
+    font-weight: 600;
+  }
+  .t-rating {
+    font-size: 1.0625rem; /* 17 */
+    line-height: 1;
+    font-weight: 700;
+  }
+  .t-wordmark {
+    font-size: 1.1875rem; /* 19 */
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--color-ink);
+  }
+  .t-wordmark-sub {
+    font-size: 0.8125rem; /* 13 */
+    line-height: 1;
+    font-weight: 500;
+    color: var(--color-muted);
+  }
+
+  /* Desktop scale-ups for the ramp entries that define a mobile variant */
+  @media (min-width: 768px) {
+    .t-display {
+      font-size: 3.5rem; /* 56 */
+      line-height: 3.875rem; /* 62 */
+    }
+    .t-h2 {
+      font-size: 2.5rem; /* 40 */
+      line-height: 2.875rem; /* 46 */
+    }
+    .t-h2-form {
+      font-size: 2.75rem; /* 44 */
+    }
+    .t-body-l {
+      font-size: 1.25rem; /* 20 */
+      line-height: 1.875rem; /* 30 */
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Utilities
+   -------------------------------------------------------------------------- */
+@layer utilities {
+  /* Standard page content width + responsive gutters */
+  .container-rk {
+    width: 100%;
+    max-width: calc(var(--container-content) + 2 * var(--spacing-gutter));
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 768px) {
+    .container-rk {
+      padding-inline: var(--spacing-gutter);
+    }
+  }
 }

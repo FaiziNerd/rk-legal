@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Star, Check, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -91,6 +92,7 @@ const featuredPosts = [
     date: "September 18, 2026",
     read: "7 min read",
     href: "/blog",
+    image: "/images/blog-24-hours.jpg",
   },
   {
     category: "Lemon law",
@@ -98,6 +100,7 @@ const featuredPosts = [
     date: "September 15, 2026",
     read: "6 min read",
     href: "/blog",
+    image: "/images/blog-30-day.jpg",
   },
   {
     category: "Workers' comp",
@@ -105,24 +108,70 @@ const featuredPosts = [
     date: "September 9, 2026",
     read: "5 min read",
     href: "/blog",
+    image: "/images/blog-wc-denied.jpg",
   },
 ];
+
+/** Multicolor Google "G" mark for the reviews rating pill. */
+function GoogleG({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"
+      />
+      <path
+        fill="#34A853"
+        d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M11.69 28.18c-.44-1.32-.69-2.73-.69-4.18s.25-2.86.69-4.18v-5.7H4.34A21.98 21.98 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"
+      />
+      <path
+        fill="#EA4335"
+        d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"
+      />
+    </svg>
+  );
+}
 
 export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-tint">
-        <Container className="grid items-center gap-10 py-14 md:py-20 lg:grid-cols-2 lg:gap-14">
-          <div>
-            <h1 className="t-display max-w-xl">
+      <section className="relative isolate overflow-hidden lg:-mt-20">
+        {/* Photograph — full-bleed behind the nav on desktop, a banner on mobile */}
+        <div className="relative h-72 w-full sm:h-80 lg:absolute lg:inset-0 lg:h-full">
+          <Image
+            src="/images/hero-home.jpg"
+            alt="Sunlit kitchen counter with a bowl of lemons, car keys and a glass of water"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[68%_center] lg:object-center"
+          />
+          {/* Legibility scrim for the overlaid text (desktop only) */}
+          <div
+            className="absolute inset-0 hidden lg:block"
+            style={{
+              background:
+                "linear-gradient(to right, #f1ede4 0%, #f1ede4 40%, rgba(241,237,228,0.7) 52%, rgba(241,237,228,0) 64%)",
+            }}
+          />
+        </div>
+
+        <Container className="relative bg-tint lg:bg-transparent">
+          <div className="max-w-xl py-12 lg:flex lg:min-h-[34rem] lg:flex-col lg:justify-center lg:py-0">
+            <h1 className="t-display max-w-xl text-ink">
               Personal injury &amp; lemon law firm in Southern California
             </h1>
             <p className="t-body-l mt-5 max-w-lg text-body">
               Hurt in an accident or stuck with a lemon car? You pay nothing
               unless we win.
             </p>
-            <div className="mt-6 inline-flex items-center gap-3 rounded-btn border border-chip bg-white px-4 py-2.5">
+            <div className="mt-6 inline-flex w-fit items-center gap-3 rounded-full border border-chip bg-white/95 px-4 py-2.5 shadow-sm backdrop-blur">
+              <GoogleG className="size-5 shrink-0" />
               <span className="t-rating text-ink">{site.rating.score}</span>
               <span className="flex gap-0.5 text-star">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -134,12 +183,6 @@ export default function HomePage() {
               </span>
             </div>
           </div>
-          {/* TODO: replace with the client's hero photograph */}
-          <div
-            className="aspect-[4/3] w-full rounded-card bg-gradient-to-br from-[#e9efe6] via-[#f3f6f1] to-[#dfe8df]"
-            role="img"
-            aria-label="Romero Kucerkova Law office"
-          />
         </Container>
       </section>
 
@@ -367,8 +410,15 @@ export default function HomePage() {
               href={post.href}
               className="group flex flex-col overflow-hidden rounded-card bg-white"
             >
-              {/* TODO: replace with the post's hero image from Contentful */}
-              <div className="aspect-[16/10] bg-gradient-to-br from-[#e9efe6] to-[#dfe8df]" />
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
               <div className="flex flex-1 flex-col p-6">
                 <span className="t-category text-brand">{post.category}</span>
                 <h3 className="t-card-title mt-2 group-hover:text-brand">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Phone } from "lucide-react";
@@ -12,13 +12,35 @@ import { Wordmark } from "./Wordmark";
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  // On the homepage the hero photo sits behind the nav, so the bar starts
+  // transparent and turns solid once the user scrolls past the hero.
+  const isHome = pathname === "/";
+  useEffect(() => {
+    if (!isHome) return;
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
+
+  // Transparent only on the desktop homepage hero (mobile keeps a solid bar).
+  const overlay = isHome && !scrolled && !open;
+
   return (
-    <header className="sticky top-0 z-50 border-b border-divider bg-surface/95 backdrop-blur">
+    <header
+      className={cn(
+        "sticky top-0 z-50 transition-colors duration-300",
+        overlay
+          ? "border-b border-divider bg-surface/95 backdrop-blur lg:border-transparent lg:bg-transparent lg:backdrop-blur-none"
+          : "border-b border-divider bg-surface/95 backdrop-blur",
+      )}
+    >
       <Container className="flex h-20 items-center justify-between gap-6">
         <Wordmark />
 

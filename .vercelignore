@@ -1,0 +1,3 @@
+# Files not needed for the production build/deploy.
+.claude
+TIMELOG.md

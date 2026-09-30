@@ -24,7 +24,9 @@ export const site = {
     count: 49,
     source: "Google",
   },
-  url: "https://rklegal.com", // TODO: confirm production domain
+  // Set NEXT_PUBLIC_SITE_URL in the deploy environment (Vercel); falls back to
+  // the production domain for local builds and metadata.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://rklegalcorp.com",
 } as const;
 
 /** Practice areas — used across nav, cards and footer. */

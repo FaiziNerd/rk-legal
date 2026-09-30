@@ -44,16 +44,22 @@ export async function POST(request: Request) {
       });
     }
 
-    // 2) Confirmation to the client (only when they gave an email).
+    // 2) Confirmation to the client (only when they gave an email). Best effort:
+    //    sending to an arbitrary address needs a verified domain, and a failure
+    //    here must never lose the lead the firm was already notified about.
     if (data.email) {
-      const clientMail = clientConfirmationEmail(data);
-      await resend.emails.send({
-        from,
-        to: data.email,
-        subject: clientMail.subject,
-        html: clientMail.html,
-        text: clientMail.text,
-      });
+      try {
+        const clientMail = clientConfirmationEmail(data);
+        await resend.emails.send({
+          from,
+          to: data.email,
+          subject: clientMail.subject,
+          html: clientMail.html,
+          text: clientMail.text,
+        });
+      } catch (confirmErr) {
+        console.warn("[contact] client confirmation skipped:", confirmErr);
+      }
     }
 
     return NextResponse.json({ ok: true });

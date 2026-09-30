@@ -27,15 +27,8 @@ export async function POST(request: Request) {
   try {
     const resend = getResend();
 
-    // Welcome / confirmation to the subscriber.
-    await resend.emails.send({
-      from,
-      to: email,
-      subject: "You're subscribed to RK Legal updates",
-      text: `Thanks for subscribing to ${site.name}. You'll get short, plain-language updates on California injury, lemon law and workers' comp. Unsubscribe anytime.`,
-    });
-
-    // Optional internal notification.
+    // Notify the firm first — this is the capture that matters, and it goes to
+    // an address we control (works even with Resend's shared test sender).
     if (firmInbox) {
       await resend.emails.send({
         from,
@@ -45,7 +38,21 @@ export async function POST(request: Request) {
       });
     }
 
-    // TODO (Phase 4): also persist the subscriber (Resend Audience or Contentful).
+    // Welcome email to the subscriber — best effort. Sending to an arbitrary
+    // address requires a verified domain; until then this will fail, and that
+    // must not fail the signup. Once EMAIL_FROM is a verified domain, it works.
+    try {
+      await resend.emails.send({
+        from,
+        to: email,
+        subject: "You're subscribed to RK Legal updates",
+        text: `Thanks for subscribing to ${site.name}. You'll get short, plain-language updates on California injury, lemon law and workers' comp. Unsubscribe anytime.`,
+      });
+    } catch (welcomeErr) {
+      console.warn("[newsletter] welcome email skipped:", welcomeErr);
+    }
+
+    // TODO: also persist the subscriber (Resend Audience or Contentful).
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[newsletter] failed:", err);
